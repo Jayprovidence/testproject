@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= court %> <%= caseNumber %> 法拍資訊 - 樹懶法拍</title>
+    <meta name="description" content="查詢 <%= court %> <%= caseNumber %> 法拍案件的詳細資訊，包含拍賣日期：<%= auctionDate %>，地址：<%= items.map(p => p.address).join(', ') %>。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-main: #F8F7F2;
+            --text-primary: #5D4037;
+        }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-8">
+        <!-- 麵包屑導覽 -->
+        <nav aria-label="breadcrumb" class="text-sm text-gray-500 mb-6">
+            <ol class="list-none p-0 inline-flex">
+                <li class="flex items-center"><a href="/" class="hover:underline">首頁</a><span class="mx-2">/</span></li>
+                <li class="flex items-center"><a href="/real-estate" class="hover:underline">不動產</a><span class="mx-2">/</span></li>
+                <li class="text-gray-700" aria-current="page"><%= caseNumber %></li>
+            </ol>
+        </nav>
+
+        <!-- 案件核心資訊 -->
+        <h1 class="text-3xl font-bold"><%= court %></h1>
+        <h2 class="text-xl text-gray-600"><%= caseNumber %> <%= division %></h2>
+        <div class="mt-4 p-4 bg-white rounded-lg shadow">
+            <!-- ... 其他核心資訊 ... -->
+        </div>
+
+        <!-- 標的物列表 -->
+        <div class="mt-6">
+            <h3 class="text-2xl font-bold mb-4">拍賣標的物列表</h3>
+            <!-- ... 標的物列表的 EJS 迴圈 ... -->
+        </div>
+
+        <!-- 【修正】相關圖片 -->
+        <div class="mt-6">
+            <h3 class="text-2xl font-bold mb-4">相關圖片</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <% if (locals.assets && assets.images && assets.images.length > 0) { %>
+                    <% assets.images.forEach(imageUrl => { %>
+                        <a href="<%= imageUrl %>" target="_blank" rel="noopener noreferrer">
+                            <img src="<%= imageUrl %>" alt="案件照片" class="w-full h-auto rounded-lg shadow-md hover:opacity-80 transition-opacity">
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-gray-500">暫無圖片</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- 【修正】相關文件 (PDF) -->
+        <div class="mt-6">
+            <h3 class="text-2xl font-bold mb-4">相關文件</h3>
+            <ul class="list-disc list-inside">
+                <% if (locals.assets && assets.pdfs && assets.pdfs.length > 0) { %>
+                    <% assets.pdfs.forEach(pdf => { %>
+                        <li class="mb-2">
+                            <a href="<%= pdf.url %>" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+                                <%= pdf.name || '下載 PDF 文件' %>
+                            </a>
+                        </li>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-gray-500">暫無文件</p>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
